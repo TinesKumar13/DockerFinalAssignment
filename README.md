@@ -4,61 +4,68 @@
 
 This is the source code for my post on [Building a Blockchain](https://medium.com/p/117428612f46). 
 
-## Installation
+## Question 1
 
-1. Make sure [Python 3.6+](https://www.python.org/downloads/) is installed. 
-2. Install [pipenv](https://github.com/kennethreitz/pipenv). 
+1. Clone the repository into your local drive
+2. Change directory to DockerFinalAssignment
+3. Enter Docker swarm mode
+4. Build the image
+5. Run the container
+6. Create the service
+```
+$  git clone https://github.com/TinesKumar13/DockerFinalAssignment
+$  cd DockerFinalAssignment
+$  docker swarm init --advertise-addr $(hostname -i)
+$  docker image build -t blockchain .
+$  docker container run -d -p 80:5000 --name=blockchain blockchain
+$  docker service create --name blockchain blockchain
 
-```
-$ pip install pipenv 
-```
-3. Install requirements  
-```
-$ pipenv install 
+
+
 ``` 
+## Question 2
+1. We seem to have the errors on the testfile given.
+2. Docker documentation when the Docker Engine runs in swarm mode, manager nodes implement the Raft Consensus Algorithm to manage the global cluster state. This is defined as to make sure all the manager nodes that are in charge of managing and scheduling tasks in cluster are storing the same consistent state. This means that in case of any failure, any other manager node can pick up the tasks and restore the services to a stable state.
+3. Add the worker nodes with the join token obtained from docker swarm init --advertise-addr $(hostname -i)
+4. Scale the service to 3 services.
+5. Run the container.
+6. Create the service.
+7. Check the scaled services.
 
-4. Run the server:
-    * `$ pipenv run python blockchain.py` 
-    * `$ pipenv run python blockchain.py -p 5001`
-    * `$ pipenv run python blockchain.py --port 5002`
-    
-## Docker
-
-Another option for running this blockchain program is to use Docker.  Follow the instructions below to create a local Docker container:
-
-1. Clone this repository
-2. Build the docker container
 
 ```
-$ docker build -t blockchain .
+$  docker service scale blockchain=3
+$  docker service ps blockchain
+
+
+
+
+``` 
+## Question 3
+1. Error in testfile provided. 
+2. We monitored the blockchain service performance using docker stats command
 ```
+$  docker stats
 
-3. Run the container
 
+
+
+
+``` 
+## Question 4
+1. We tweaked the pre-existing Dockerfile to get a base image with lesser size and used pip caching ( --no-cache-dir )
+2. We monitored the blockchain service performance using docker stats command
+3. We chnaged the pre-existing dockerfile with edit at FROM python:3.7.2-alpine3.8 and added the no cache piping before requirements.txt
+4. The final image build was smaller (90.6mb) compared to the previous one (106mb)
 ```
-$ docker run --rm -p 80:5000 blockchain
-```
-
-4. To add more instances, vary the public port number before the colon:
-
-```
-$ docker run --rm -p 81:5000 blockchain
-$ docker run --rm -p 82:5000 blockchain
-$ docker run --rm -p 83:5000 blockchain
-```
-
-## Installation (C# Implementation)
-
-1. Install a free copy of Visual Studio IDE (Community Edition):
-https://www.visualstudio.com/vs/
-
-2. Once installed, open the solution file (BlockChain.sln) using the File > Open > Project/Solution menu options within Visual Studio.
-
-3. From within the "Solution Explorer", right click the BlockChain.Console project and select the "Set As Startup Project" option.
-
-4. Click the "Start" button, or hit F5 to run. The program executes in a console window, and is controlled via HTTP with the same commands as the Python version.
+$  vi Dockerfile
+$  docker image build -t blockchain .
 
 
+
+
+
+``` 
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
